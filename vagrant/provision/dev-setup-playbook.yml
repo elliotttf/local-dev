@@ -1,10 +1,16 @@
 ##
-# Ansible playbook setting up developer tools used in building Training Wheels
+# Ansible playbook setting up developer tools used in building local dev environment
 #
 
 ---
 - hosts: all
   gather_facts: False
+
+  vars:
+    phpfpmhome: '/home/phpfpm'
+
+  vars_files:
+    - settings.yml
 
   tasks:
     ##
@@ -33,6 +39,9 @@
         - tomcat6-user
         - tomcat6-docs
         - tomcat6-examples
+        - vim-nox
+        - vim-scripts
+        - vim-common
 
     - name: Install Aurora
       action: command gem install compass-aurora creates=/var/lib/gems/1.8/specifications/compass-aurora-1.1.1.gemspec
@@ -78,15 +87,6 @@
 
     - name: Create phpfpm home
       action: file path=$phpfpmhome state=directory owner=phpfpm group=phpfpm mode=700
-
-    - name: Private tmp directory for php-fpm needed by Training Wheels
-      action: file path=$phpfpmhome/tmp state=directory owner=phpfpm group=phpfpm mode=700
-
-    - name: Copy MySQL config from root so phpfpm can easily administer the database
-      action: shell cp /root/.my.cnf $phpfpmhome/.my.cnf creates=$phpfpmhome/.my.cnf
-
-    - name: Check permissions of MySQL config
-      action: file path=$phpfpmhome/.my.cnf owner=phpfpm group=phpfpm mode=600
 
     ##
     # Apt package installation of required software.
@@ -136,20 +136,67 @@
     ##
     # Apache solr
     #
-    - name: Solr | Copy war
-      action: copy src=files/spache-solr-3.6.2/dist/apache-solr-3.6.2.war dest=/usr/share/tomcate6/webapps/solr.war
+    - name: Solr | Create webapps directory
+      action: file path=/usr/share/tomcate6/webapps state=directory owner=tomcat6 group=tomcat6 mode=700
 
-    - name: Solr | Copy example
-      action: copy src=files/apache-solr-3.6.2/example/solr dest=/usr/share/tomcate6/solr/
+    - name: Solr | Copy war
+      action: copy src=files/apache-solr-3.6.2/dist/apache-solr-3.6.2.war dest=/usr/share/tomcate6/webapps/solr.war
+
+    - name: Solr | Create solr directory
+      action: file path=/usr/share/tomcat6/solr state=directory owner=root group=root mode=700
+
+    - name: Solr | Copy solr directory
+      action: copy src=files/solr.tgz dest=/usr/share/tomcat6/solr/
+
+    - name: Solr | Expand solr directory
+      action: shell cd /usr/share/tomcat6/solr/ && tar -xzf ./solr.tgz
 
     - name: Solr | Copy config
       action: copy src=files/etc-tomcat6-catalina-localhost-solr.xml dest=/etc/tomcat6/Catalina/localhost/solr.xml
 
     - name: Solr | Copy multicore config
-      action: copy src=files/apache-solr-3.6.2/example/multicore/solr.xml dest=/usr/share/tomcat6/solr/solr.xml
+      action: copy src=files/usr-share-tomcat6-solr-solr.xml dest=/usr/share/tomcat6/solr/solr.xml
 
     - name: Solr | Restart tomcat
       action: service name=tomcat6 state=restarted
+
+    ##
+    # MongoDB install.
+    #
+    - name: MongoDB | Add the key
+      action: command apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+
+    - name: MongoDB | Add the MongoDB repo
+      action: copy src=files/etc-apt-sources-list-d-mongodb-list dest=/etc/apt/sources.list.d/mongodb.list
+
+    - name: MongoDB | Update the apt cache for the new repository
+      action: apt update-cache=yes
+
+    - name: MongoDB | Install Mongo
+      action: apt pkg=$item state=installed
+      with_items:
+        - mongodb-10gen
+
+    - name: MongoDB | Restart Mongo
+      action: service name=mongodb state=restarted
+
+    ##
+    # Node.js install.
+    #
+    - name: Node.js | Package prerequisites for node.js
+      action: apt pkg=python-software-properties state=installed
+
+    - name: Node.js | Add the node.js PPA
+      action: command add-apt-repository -y ppa:chris-lea/node.js creates=/etc/apt/sources.list.d/chris-lea-node_js-precise.list
+
+    - name: Node.js | Update the apt cache for the new repository
+      action: apt update-cache=yes
+
+    - name: Node.js | Install nodejs and npm
+      action: apt pkg=$item state=installed
+      with_items:
+        - nodejs
+        - npm
 
     ##
     # Misc fixes
