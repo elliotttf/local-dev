@@ -8,6 +8,7 @@
 
   vars:
     phpfpmhome: '/home/phpfpm'
+    vagrant_home: '/home/vagrant'
 
   vars_files:
     - settings.yml
@@ -42,6 +43,9 @@
         - vim-nox
         - vim-scripts
         - vim-common
+        - unzip
+        - curl
+        - htop
 
     - name: Install Aurora
       action: command gem install compass-aurora creates=/var/lib/gems/1.8/specifications/compass-aurora-1.1.1.gemspec
@@ -97,8 +101,6 @@
         - nginx
         - php5-fpm
         - php5-intl
-        - unzip
-        - curl
 
     ##
     # Configuration for php-fpm
@@ -111,6 +113,9 @@
 
     - name: Sudoers file allowing the phpfpm user to administer the server
       action: copy src=files/etc-sudoers-d-phpfpm dest=/etc/sudoers.d/phpfpm mode=0440
+
+    - name: Restart PHP-fpm
+      action: service name=php5-fpm state=restarted
 
     ##
     # Configuration for MongoDB database
@@ -130,8 +135,14 @@
     - name: Configure nginx
       action: template src=templates/etc-nginx-nginx-conf.j2 dest=/etc/nginx/nginx.conf
 
-    - name: Remove default site
-      action: file path=/etc/nginx/sites-enabled/default state=absent
+    - name: Update default site
+      action: template src=templates/etc-nginx-sites-available-default.j2 dest=/etc/nginx/sites-available/default
+
+    - name: Enable default site
+      action: file path=/etc/nginx/sites-enabled/default src=/etc/nginx/sites-available/default state=link
+
+    - name: Restart nginx
+      action: service name=nginx state=restarted
 
     ##
     # Apache solr
@@ -197,6 +208,22 @@
       with_items:
         - nodejs
         - npm
+
+    ##
+    # Drush install, a Drupal shell tool.
+    #
+    - name: Setup PEAR channel for drush
+      action: command pear channel-discover pear.drush.org creates=/usr/share/php/.channels/pear.drush.org.reg
+
+    - name: Install drush for Drupal
+      action: command pear install drush/drush creates=/usr/bin/drush
+
+    - name: Create local drush file
+      action: file path=${vagrant_home}/.drush state=directory mode=755
+
+    - name: Copy drush aliases
+      action: copy src=$item dest=${vagrant_home}/.drush/
+      with_fileglob: files/drush/*.php
 
     ##
     # Misc fixes

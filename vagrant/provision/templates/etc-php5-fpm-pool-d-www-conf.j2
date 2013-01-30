@@ -34,7 +34,7 @@ listen = {{ phpfpm_listen }}
 
 ; Set listen(2) backlog. A value of '-1' means unlimited.
 ; Default Value: 128 (-1 on FreeBSD and OpenBSD)
-;listen.backlog = -1
+listen.backlog = -1
 
 ; Set permissions for unix socket, if one is used. In Linux, read/write
 ; permissions must be set in order to allow connections from a web server. Many
@@ -307,7 +307,7 @@ pm.max_spare_servers = 6
 ; does not stop script execution for some reason. A value of '0' means 'off'.
 ; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)
 ; Default Value: 0
-;request_terminate_timeout = 0
+request_terminate_timeout = {{ php_max_execution_time }}
 
 ; Set open file descriptor rlimit.
 ; Default Value: system defined value
