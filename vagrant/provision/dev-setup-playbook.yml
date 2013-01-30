@@ -140,7 +140,7 @@
       action: file path=/usr/share/tomcate6/webapps state=directory owner=tomcat6 group=tomcat6 mode=700
 
     - name: Solr | Copy war
-      action: copy src=files/apache-solr-3.6.2/dist/apache-solr-3.6.2.war dest=/usr/share/tomcate6/webapps/solr.war
+      action: copy src=files/usr-share-tomcat6-webapps-solr.war dest=/usr/share/tomcate6/webapps/solr.war
 
     - name: Solr | Create solr directory
       action: file path=/usr/share/tomcat6/solr state=directory owner=root group=root mode=700

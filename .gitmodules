@@ -1,0 +1,3 @@
+[submodule "vagrant/provision/files/mydots"]
+	path = vagrant/provision/files/mydots
+	url = git@github.com:elliotttf/mydots.git
