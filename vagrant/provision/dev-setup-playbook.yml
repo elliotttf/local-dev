@@ -148,19 +148,16 @@
     # Apache solr
     #
     - name: Solr | Create webapps directory
-      action: file path=/usr/share/tomcate6/webapps state=directory owner=tomcat6 group=tomcat6 mode=700
+      action: file path=/usr/share/tomcat6/webapps state=directory owner=tomcat6 group=tomcat6 mode=700
 
     - name: Solr | Copy war
-      action: copy src=files/usr-share-tomcat6-webapps-solr.war dest=/usr/share/tomcate6/webapps/solr.war
-
-    - name: Solr | Create solr directory
-      action: file path=/usr/share/tomcat6/solr state=directory owner=root group=root mode=700
+      action: copy src=files/usr-share-tomcat6-webapps-solr.war dest=/usr/share/tomcat6/webapps/solr.war
 
     - name: Solr | Copy solr directory
-      action: copy src=files/solr.tgz dest=/usr/share/tomcat6/solr/
+      action: copy src=files/solr.tgz dest=/usr/share/tomcat6/
 
     - name: Solr | Expand solr directory
-      action: shell cd /usr/share/tomcat6/solr/ && tar -xzf ./solr.tgz
+      action: shell cd /usr/share/tomcat6/ && tar -xzf ./solr.tgz
 
     - name: Solr | Copy config
       action: copy src=files/etc-tomcat6-catalina-localhost-solr.xml dest=/etc/tomcat6/Catalina/localhost/solr.xml
