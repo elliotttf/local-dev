@@ -216,10 +216,10 @@
       action: command pear install drush/drush creates=/usr/bin/drush
 
     - name: Create local drush file
-      action: file path=${vagrant_home}/.drush state=directory mode=755
+      action: file path=${vagrant_home}/.drush state=directory mode=755 owner=vagrant
 
     - name: Copy drush aliases
-      action: copy src=$item dest=${vagrant_home}/.drush/
+      action: copy src=$item dest=${vagrant_home}/.drush/ owner=vagrant
       with_fileglob: files/drush/*.php
 
     ##
