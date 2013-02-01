@@ -4,6 +4,8 @@ server {
   server_name "~^(?<domain>.+).local$";
   root /var/www/hosts/$domain;
 
+  index index.html index.php /index.php;
+
   location = /favicon.ico {
     log_not_found off;
     access_log off;
@@ -20,7 +22,7 @@ server {
     deny all;
   }
 
-  # Very rarely should these ever be accessed  outside of your lan
+  # Very rarely should these ever be accessed outside of your lan
   location ~* \.(txt|log)$ {
     allow 192.168.0.0/16;
     deny all;
@@ -31,8 +33,8 @@ server {
   }
 
   location / {
-    # This is cool because no php is touched   for static content
-    try_files $uri @rewrite;
+    # This is cool because no php is touched for static content
+    try_files $uri $uri/index.html @rewrite;
   }
 
   location @rewrite {
@@ -45,12 +47,12 @@ server {
     fastcgi_split_path_info ^(.+\.php)(/.+)$;
     #NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
     include fastcgi_params;
-    fastcgi_param SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     fastcgi_intercept_errors on;
     fastcgi_pass unix:{{ phpfpm_listen }};
   }
 
-  # Fighting with ImageCache? This little gem is   amazing.
+  # Fighting with ImageCache? This little gem is amazing.
   location ~ ^/sites/.*/files/imagecache/ {
     try_files $uri @rewrite;
   }

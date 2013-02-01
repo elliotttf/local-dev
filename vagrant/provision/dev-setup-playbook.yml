@@ -29,6 +29,7 @@
         - php-soap
         - php5-gd
         - php-pear
+        - php5-curl
         - sendmail
         - vsftpd
         - unzip
