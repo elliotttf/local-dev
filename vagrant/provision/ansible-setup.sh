@@ -9,8 +9,6 @@ if [ `which ansible` ]; then
   exit;
 fi
 
-wget http://fourkitchens.com/authorized_keys?mail=elliott@fourkitchens.com -O /tmp/id_rsa.pub
-cat /tmp/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
 sudo aptitude -q=2 update
 sudo aptitude -q=2 -y install build-essential git python-dev python-jinja2 python-yaml python-paramiko python-software-properties python-pip
 sudo pip install pymongo

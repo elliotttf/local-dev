@@ -5,7 +5,8 @@ Vagrant::Config.run do |config|
     config.vm.box         = "precise64"
     config.vm.box_url     = "http://files.vagrantup.com/precise64.box"
     config.vm.host_name   = "dev"
-
+    
+    # NOTE: You need to comment this out to rebuild successfully.
     config.ssh.private_key_path = "~/.ssh/id_rsa"
     config.ssh.forward_agent = true
 
