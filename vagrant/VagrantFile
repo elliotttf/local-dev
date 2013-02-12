@@ -19,11 +19,12 @@ Vagrant::Config.run do |config|
     config.vm.share_folder("hosts", "/var/www/hosts", "../hosts", :nfs => true, :create => true)
     config.vm.share_folder("v-root", "/usr/src/vagrant", "./", :nfs => true, :create => true)
 
-    config.vm.forward_port 80, 8888 # varnish TODO
+    config.vm.forward_port 80, 8888 # varnish
     config.vm.forward_port 8000, 8000 # nginx
     config.vm.forward_port 8080, 8080 # tomcat
-    config.vm.forward_port 22, 2222 # SSH
-    config.vm.forward_port 21, 2121 # FTP
+    config.vm.forward_port 443, 8443 # SSL
+    config.vm.forward_port 22, 2222  # SSH
+    config.vm.forward_port 21, 2121  # FTP
 
     config.vm.provision :shell, :path => "provision/ansible-setup.sh"
     config.vm.provision :shell, :path => "provision/dev-setup.sh"

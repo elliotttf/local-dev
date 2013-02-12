@@ -1,10 +1,14 @@
 server {
-  listen   8000; ## listen for ipv4; this line is  default and implied
+  listen   443 ssl; ## listen for ipv4; this line is  default and implied
+
+  ssl_certificate     /etc/ssl/certs/ssl.crt;
+  ssl_certificate_key /etc/ssl/private/ssl.key;
+  keepalive_timeout   70;
+
+  port_in_redirect off;
 
   server_name "~^(?<domain>.+).local$";
   root /var/www/hosts/$domain;
-
-  port_in_redirect off;
 
   index index.html index.php /index.php;
 
@@ -49,7 +53,9 @@ server {
     fastcgi_split_path_info ^(.+\.php)(/.+)$;
     #NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
     include fastcgi_params;
+    fastcgi_param SERVER_NAME $domain.local;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param HTTPS on;
     fastcgi_intercept_errors on;
     fastcgi_pass unix:{{ phpfpm_listen }};
   }

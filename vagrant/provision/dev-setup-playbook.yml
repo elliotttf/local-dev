@@ -41,12 +41,22 @@
         - tomcat6-user
         - tomcat6-docs
         - tomcat6-examples
+        - varnish
         - vim-nox
         - vim-scripts
         - vim-common
         - unzip
         - curl
         - htop
+
+    - name: Remove unused packages
+      action: apt pkg=$item purge=yes state=absent
+      with_items:
+        - apache2-mpm-prefork
+        - apache2-utils
+        - apache2.2-bin
+        - apache2.2-common
+        - libapache2-mod-php5
 
     - name: Install Aurora
       action: command gem install compass-aurora creates=/var/lib/gems/1.8/specifications/compass-aurora-1.1.1.gemspec
@@ -128,6 +138,18 @@
       action: copy dest=/etc/php5/conf.d/mongo.ini src=files/etc-php5-conf-d-mongo-ini
 
     ##
+    # Configuration for varnish
+    #
+    - name: Copy varnish default.vcl
+      action: copy src=files/etc-varnish-default.vcl dest=/etc/varnish/default.vcl
+
+    - name: Copy varnish config
+      action: copy src=files/etc-default-varnish dest=/etc/default/varnish
+
+    - name: Restart varnish
+      action: service name=varnish state=restarted
+
+    ##
     # Configuration for nginx
     #
     - name: Add mime types for nginx including our font type WOFF
@@ -141,6 +163,18 @@
 
     - name: Enable default site
       action: file path=/etc/nginx/sites-enabled/default src=/etc/nginx/sites-available/default state=link
+
+    - name: Copy self-signed cert
+      action: copy src=files/etc-ssl-certs-ssl.crt dest=/etc/ssl/certs/ssl.crt
+
+    - name: Copy self-signed key
+      action: copy src=files/etc-ssl-private-ssl.key dest=/etc/ssl/private/ssl.key
+
+    - name: Update default ssl site
+      action: template src=templates/etc-nginx-sites-available-default-ssl.j2 dest=/etc/nginx/sites-available/default-ssl
+
+    - name: Enable default ssl site
+      action: file path=/etc/nginx/sites-enabled/default-ssl src=/etc/nginx/sites-available/default-ssl state=link
 
     - name: Restart nginx
       action: service name=nginx state=restarted
