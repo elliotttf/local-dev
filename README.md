@@ -10,22 +10,32 @@ Ansible playbooks and vagrant config for local dev environment.
 
 ### Getting started
 
-First, you'll need to comment out a line from ```local-dev/vagrant/VagrantFile```
-which tells the VM to log in with your private key:
-
-```
-config.ssh.private_key_path = "~/.ssh/id_rsa"
-```
-
-Now you can build the virtual machine as follows:
+You can build the virtual machine as follows:
 
 ```shell
 cd local-dev/vagrant
 vagrant up
 ```
 
-If you're going to be doing on-server development you'll want to uncomment the line
-in ```VagrantFile``` and reboot the VM with:
+If you're going to be doing on-server development you'll want to add your public
+key to the authorized_hosts file on the VM:
+
+```shell
+vagrant ssh
+# This is an example of fetching authorized keys, it's up to you to
+# figure out how to get your public key on the VM...
+wget http://fourkitchens.com/authorized_keys -O /tmp/authorized_keys
+cat /tmp/authorized_keys >> ~/.ssh/authorized_keys
+exit
+```
+
+then uncomment the following line in ```local-dev/vagrant/VagrantFile```
+
+```
+config.ssh.private_key_path = "~/.ssh/id_rsa"
+```
+
+and reboot the VM with:
 
 ```shell
 vagrant halt && vagrant up

@@ -5,9 +5,9 @@ Vagrant::Config.run do |config|
     config.vm.box         = "precise64"
     config.vm.box_url     = "http://files.vagrantup.com/precise64.box"
     config.vm.host_name   = "dev"
-    
+
     # NOTE: You need to comment this out to rebuild successfully.
-    config.ssh.private_key_path = "~/.ssh/id_rsa"
+    #config.ssh.private_key_path = "~/.ssh/id_rsa"
     config.ssh.forward_agent = true
 
     config.vm.customize ["modifyvm", :id, "--memory", "2048"]
@@ -25,6 +25,7 @@ Vagrant::Config.run do |config|
     config.vm.forward_port 443, 8443 # SSL
     config.vm.forward_port 22, 2222  # SSH
     config.vm.forward_port 21, 2121  # FTP
+    config.vm.forward_port 3306, 3306 # MySQL
 
     config.vm.provision :shell, :path => "provision/ansible-setup.sh"
     config.vm.provision :shell, :path => "provision/dev-setup.sh"
