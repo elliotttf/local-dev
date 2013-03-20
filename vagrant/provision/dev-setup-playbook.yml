@@ -26,6 +26,7 @@
         - php5-mysql
         - php-apc
         - php5-xmlrpc
+        - php5-xdebug
         - php-soap
         - php5-gd
         - php-pear
@@ -124,6 +125,9 @@
 
     - name: PHP configuration file php.ini for php-fpm
       action: template src=templates/etc-php5-fpm-php-ini.j2 dest=/etc/php5/fpm/php.ini
+
+    - name: XDebug Config
+      action: copy dest=/etc/php5/conf.d/xdebug.ini src=files/etc-php5-conf-d-xdebug-ini
 
     - name: Sudoers file allowing the phpfpm user to administer the server
       action: copy src=files/etc-sudoers-d-phpfpm dest=/etc/sudoers.d/phpfpm mode=0440
