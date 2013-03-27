@@ -78,3 +78,11 @@ sudo ipfw add 101 fwd 127.0.0.1,8443 tcp from any to me 443
 For a more detailed guide on port forwarding (and info on making this change permanent)
 see [this post](http://www.dmuth.org/node/1404/web-development-port-80-and-443-vagrant).
 
+### Remote debugging
+
+xdebug is enabled but remote autostart is not. You can either flip this setting in
+/etc/php5/conf.d/xdebug.ini or you can use a browser extension like [XDebug helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
+to enable/disable debugging on the fly.
+
+[MacGDBp](http://www.bluestatic.org/software/macgdbp/) is a simple remote debugger
+for OSX. It's a little flakey but will work in most instances.
