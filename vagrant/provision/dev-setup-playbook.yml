@@ -246,7 +246,6 @@
       action: apt pkg=$item state=installed
       with_items:
         - nodejs
-        - npm
 
     ##
     # Drush install, a Drupal shell tool.
