@@ -49,6 +49,7 @@
         - unzip
         - curl
         - htop
+        - redis-server
 
     - name: Remove unused packages
       action: apt pkg=$item purge=yes state=absent
