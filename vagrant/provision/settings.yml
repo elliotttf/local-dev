@@ -51,3 +51,7 @@ nginx_lan_subnet: '192.168.0.0/16'
 nginx_worker_processes: '1'
 nginx_webroot: '/var/www'
 
+# git
+git_name: 'Elliott Foster'
+git_mail: 'elliottf@codebrews.com'
+

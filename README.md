@@ -86,3 +86,9 @@ to enable/disable debugging on the fly.
 
 [MacGDBp](http://www.bluestatic.org/software/macgdbp/) is a simple remote debugger
 for OSX. It's a little flakey but will work in most instances.
+
+### Git
+
+If you'll be committing code in git on the VM you'll want to change the ```git_name``` and ```git_mail```
+variables in ```vagrant/provision/settings.yml```.
+

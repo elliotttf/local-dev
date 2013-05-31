@@ -249,6 +249,12 @@
         - nodejs
 
     ##
+    # Git config
+    #
+    - name: Copy gitconfig
+      action: template src=templates/home-vagrant-.gitconfig.j2 dest=/home/vagrant/.gitconfig
+
+    ##
     # Drush install, a Drupal shell tool.
     #
     - name: Setup PEAR channel for drush
