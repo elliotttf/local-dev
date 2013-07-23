@@ -60,17 +60,17 @@
         - apache2.2-common
         - libapache2-mod-php5
 
-    - name: Install Aurora
-      action: command gem install compass-aurora
+    #- name: Install Aurora
+    #  action: command gem install compass-aurora
 
-    - name: Install Susy
-      action: command gem install susy
+    #- name: Install Susy
+    #  action: command gem install susy
 
-    - name: Install Animation
-      action: command gem install animation --pre
+    #- name: Install Animation
+    #  action: command gem install animation --pre
 
-    - name: Install RGBA PNG
-      action: command gem install compass-rgbapng
+    #- name: Install RGBA PNG
+    #  action: command gem install compass-rgbapng
 
     ##
     # PHP Setup.
