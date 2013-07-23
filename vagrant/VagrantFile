@@ -11,7 +11,7 @@ Vagrant::Config.run do |config|
     config.ssh.forward_agent = true
 
     config.vm.customize ["modifyvm", :id, "--memory", "2048"]
-    config.vm.customize ["modifyvm", :id, "--cpus", "1"]
+    config.vm.customize ["modifyvm", :id, "--cpus", "2"]
 
     # Shared folders through NFS. This is supported in Mac and Linux. Windows may have
     # issues, see Vagrant site for documentation.
