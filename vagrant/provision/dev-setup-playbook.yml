@@ -81,8 +81,17 @@
     ##
     # MySQL database setup.
     #
+    - name: Stop MySQL
+      action: service name=mysql state=stopped
+
     - name: MySQL configuration file my.cnf
       action: template src=templates/etc-mysql-my-cnf.j2 dest=/etc/mysql/my.cnf
+
+    - name: Remove ib_logfiles
+      command: rm -f /var/lib/mysql/ib_logfile*
+
+    - name: Start MySQL
+      action: service name=mysql state=started
 
     - name: Remove the MySQL test database
       action: mysql_db db=test state=absent
