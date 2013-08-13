@@ -133,6 +133,9 @@
     - name: Configure php-fpm
       action: template src=templates/etc-php5-fpm-pool-d-www-conf.j2 dest=/etc/php5/fpm/pool.d/www.conf
 
+    - name: CLI Config
+      action: copy dest=/etc/php5/cli/php.ini src=files/etc-php5-cli-php.ini
+
     - name: PHP configuration file php.ini for php-fpm
       action: template src=templates/etc-php5-fpm-php-ini.j2 dest=/etc/php5/fpm/php.ini
 
