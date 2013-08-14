@@ -88,7 +88,7 @@
       action: template src=templates/etc-mysql-my-cnf.j2 dest=/etc/mysql/my.cnf
 
     - name: Remove ib_logfiles
-      command: rm -f /var/lib/mysql/ib_log*
+      command: rm -f /var/lib/mysql/ib*
 
     - name: Start MySQL
       action: service name=mysql state=started
