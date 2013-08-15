@@ -87,8 +87,17 @@
     - name: MySQL configuration file my.cnf
       action: template src=templates/etc-mysql-my-cnf.j2 dest=/etc/mysql/my.cnf
 
-    - name: Remove ib_logfiles
-      command: sudo rm -f /var/lib/mysql/ib*
+    # Note: the size of the logfiles will be off which causes mysql to fail to
+    # launch, so we'll remove them here then launch. This isn't ideal for an
+    # already provisioned environment but shouldn't be an issue for new environments.
+    - name: Remove ibdata
+      command: rm -f /var/lib/mysql/ibdata1 removes=/var/lib/mysql/ibdata1
+
+    - name: Remove ib_logfile0
+      command: rm -f /var/lib/mysql/ib_logfile0 removes=/var/lib/mysql/ib_logfile0
+
+    - name: Remove ib_logfile1
+      command: rm -f /var/lib/mysql/ib_logfile1 removes=/var/lib/mysql/ib_logfile1
 
     - name: Start MySQL
       action: service name=mysql state=started
